@@ -1,0 +1,5 @@
+Sample	pM
+STN1	10
+STN2	1
+STN3	0.1
+STN4	0.01
