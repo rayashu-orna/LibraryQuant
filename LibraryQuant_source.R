@@ -1,3 +1,6 @@
+#!/usr/bin/env Rscript
+
+
 ##libraries needed:
 # data.table
 # ggplot2
@@ -6,14 +9,13 @@
 # dplyr
 
 
-setwd("C:/Users/RayaShu/OneDrive - Orna Therapeutics/git/LibraryQuant")
-library(dplyr)
+args <- commandArgs(trailingOnly=TRUE)
 
 # read in qPCR Ct values
-Ct <- data.table::fread("Input/2020-12-03_libquant_clean.txt")
+Ct <- data.table::fread(args[1])
 
 # library size
-lib_size <- 230
+lib_size <- args[2]
 
 
 # make standard curve
@@ -57,12 +59,13 @@ Ct_lib$pM  <- 10^((Ct_lib$CT-Stn_fit$coefficients[1])/Stn_fit$coefficients[2])
 Ct_lib$nM_undiluted <- Ct_lib$pM * Ct_lib$Dilution / 1000
 Ct_lib$nM_undil_sizeadj <- Ct_lib$nM_undiluted * 399 / lib_size
 
+#  library(dplyr)
 Ct_lib %>%
   group_by(Sample, Dilution) %>%
   summarize(nM_undil_sizeadj.mean = mean(nM_undil_sizeadj)) %>% 
   group_by(Sample) %>%
   summarize(nM_undil_sizeadj.avg = mean(nM_undil_sizeadj.mean), dilution_diff = abs(diff(nM_undil_sizeadj.mean))) -> Ct_lib
 
-#Ct_lib <- as.data.frame(Ct_lib)
+Ct_lib[,2:3] <- round(Ct_lib[,2:3], digits = 3)
 
 write.table(Ct_lib, "Avg.Undiluted.Conc.txt", quote = F, row.names = F)
