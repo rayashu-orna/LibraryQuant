@@ -1,13 +1,6 @@
 #!/usr/bin/env Rscript
 
 
-##libraries needed:
-# data.table
-# ggplot2
-# ggpmisc
-# scales
-# dplyr
-
 
 args <- commandArgs(trailingOnly=TRUE)
 
@@ -68,4 +61,4 @@ Ct_lib %>%
 
 Ct_lib[,2:3] <- round(Ct_lib[,2:3], digits = 3)
 
-write.table(Ct_lib, "Avg.Undiluted.Conc.txt", quote = F, row.names = F)
+write.table(Ct_lib, "Avg.Undiluted.Conc.tsv", quote = F, row.names = F)
