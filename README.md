@@ -8,7 +8,7 @@ You will need a qPCR result table that's removed of obvious outliers among the t
 ### Prerequisites
 R with the following libraries installed:  data.table, ggplot2, ggpmisc, scales, dplyr
 
-qPCR Ct/Cq table: 4 columns. The first column "SampleType" contains factors of either "library" or "STN" (standards); the second column "Sample" contains the sample names (e.g. "library1", "library2", "STN1", "STN2"); the third column "Dilution" contains the dilution factor of the particular well (e.g. 1000, 10000, 100000); the fourth column "CT" contains Ct or Cq numbers from the qPCR). See the Example_input folder for an example table.
+qPCR Ct/Cq table: 4 columns. The first column "SampleType" contains factors of either "library" or "STN" (standards); the second column "Sample" contains the sample names (e.g. "library1", "library2", "STN1", "STN2"); the third column "Dilution" contains the dilution factor of the particular well (numeric, e.g. 1000, 10000, 100000); the fourth column "CT" contains Ct or Cq numbers from the qPCR (numeric). See the Example_input folder for an example table.
 
 ```
 SampleType  Sample  Dilution  CT
