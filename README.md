@@ -23,6 +23,10 @@ Run this R script with your qPCR Ct/Cq table and average library size (numeric) 
 ```
 Rscript LibraryQuant_source.R YOUR_QPCR_CT.tsv YOUR_LIBRARY_SIZE NUM_STNs
 ```
+For example:
+```
+Rscript LibraryQuant_source.R Example_Input/libCT_clean_6.txt 250 6
+```
 
 ### Output
 A file named standard_curve.pdf with the plot for the standard curve, and a file named Avg.Undiluted.Conc.tsv with the size adjusted average concentration in nM for each of the tesed libraries, as well as the difference between the conctrations caculated from the two dilutions.
