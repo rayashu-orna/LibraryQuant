@@ -21,7 +21,11 @@ library lib_1 100000  17
 Run this R script with your qPCR Ct/Cq table and average library size (numeric) as parameters
 
 ```
-Rscript LibraryQuant_source.R YOUR_QPCR_CT.tsv YOUR_LIBRARY_SIZE
+Rscript LibraryQuant_source.R YOUR_QPCR_CT.tsv YOUR_LIBRARY_SIZE NUM_STNs
+```
+For example:
+```
+Rscript LibraryQuant_source.R Example_Input/libCT_clean_6.txt 250 6
 ```
 
 ### Output

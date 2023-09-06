@@ -6,14 +6,25 @@ args <- commandArgs(trailingOnly=TRUE)
 
 # read in qPCR Ct values
 Ct <- data.table::fread(args[1])
+# Ct <- data.table::fread("Example_Input/libCT_clean_6.txt")
 
 # library size
 lib_size <- as.numeric(args[2])
+# lib_size <- 250
+
+# stn table option
+Num_stn <- as.numeric(args[3])
+#Num_stn <- 4
 
 
 # make standard curve
 Stn <- Ct[Ct$SampleType == "STN",]
-Stn_concentration <- data.table::fread("STNs.txt")
+
+if(!(Num_stn %in% c(4, 6))) {
+  print("please make sure your NUM_STNs is either 4 or 6")
+} else {
+  Stn_concentration <- data.table::fread(paste0("STNs", Num_stn, ".txt"))
+}
 Stn <- merge(Stn, Stn_concentration, "Sample")
 Stn$Log10pM <- log10(Stn$pM)
 
