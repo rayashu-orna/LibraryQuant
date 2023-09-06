@@ -61,4 +61,4 @@ Ct_lib %>%
 
 Ct_lib[,2:3] <- round(Ct_lib[,2:3], digits = 3)
 
-write.table(Ct_lib, "Avg.Undiluted.Conc.tsv", quote = F, row.names = F)
+write.csv(Ct_lib, "Avg.Undiluted.Conc.csv", quote = F, row.names = F)
