@@ -6,7 +6,7 @@ args <- commandArgs(trailingOnly=TRUE)
 
 # read in qPCR Ct values
 Ct <- data.table::fread(args[1])
-# Ct <- data.table::fread("Example_Input/libCT_clean_6.txt")
+# Ct <- data.table::fread("Example_Input/libCT_clean_4stn.tsv")
 
 # library size
 lib_size <- as.numeric(args[2])
@@ -14,7 +14,7 @@ lib_size <- as.numeric(args[2])
 
 # stn table option
 Num_stn <- as.numeric(args[3])
-#Num_stn <- 4
+# Num_stn <- 4
 
 
 # make standard curve
@@ -58,18 +58,22 @@ dev.off()
 
 # calculate concentrations of test libraries
 Ct_lib <- Ct[Ct$SampleType == "library",]
-
 Ct_lib$pM  <- 10^((Ct_lib$CT-Stn_fit$coefficients[1])/Stn_fit$coefficients[2])
 Ct_lib$nM_undiluted <- Ct_lib$pM * Ct_lib$Dilution / 1000
 Ct_lib$nM_undil_sizeadj <- Ct_lib$nM_undiluted * 399 / lib_size
 
+
 library(dplyr)
 Ct_lib %>%
   group_by(Sample, Dilution) %>%
-  summarize(nM_undil_sizeadj.mean = mean(nM_undil_sizeadj)) %>% 
-  group_by(Sample) %>%
-  summarize(nM_undil_sizeadj.avg = mean(nM_undil_sizeadj.mean), dilution_diff = abs(diff(nM_undil_sizeadj.mean))) -> Ct_lib
+  summarize(nM_undil_sizeadj.mean = mean(nM_undil_sizeadj)) -> Ct_lib 
 
-Ct_lib[,2:3] <- round(Ct_lib[,2:3], digits = 3)
+Ct_lib <- reshape2::dcast(Ct_lib, Sample ~ Dilution, value.var = "nM_undil_sizeadj.mean")
+colnames(Ct_lib)[2:3] <- paste("nM_undil_sizeadj", paste0(as.numeric(colnames(Ct_lib)[2:3])/1000, "k"), sep="_")
+Ct_lib$nM_undil_sizeadj.mean <- apply(Ct_lib[,2:3], 1, function(x) mean(x, na.rm = T))
+Ct_lib$nM_diff_btw_dilutions <- apply(Ct_lib[,2:3], 1, function(x) abs(diff(x)))
+Ct_lib$frac_diff <- Ct_lib$nM_diff_btw_dilutions / Ct_lib$nM_undil_sizeadj.mean
+
+Ct_lib[,2:ncol(Ct_lib)] <- round(Ct_lib[,2:ncol(Ct_lib)], digits = 3)
 
 write.csv(Ct_lib, "Avg.Undiluted.Conc.csv", quote = F, row.names = F)
